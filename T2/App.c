@@ -1,47 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
-char *ReadFile(char *filename)
-{
-    char *buffer = NULL;
-    int string_size, read_size;
-    FILE *handler = fopen(filename, "r");
+#define SIZE_WORDS 30
+#define MILLION 1000000
 
-    if (handler)
-    {
+typedef struct typeword Word;
+struct typeword{
+    char string[SIZE_WORDS];
+    int count;
+    Word* next;
+};
 
-        fseek(handler, 0, SEEK_END);
+void FixString(char *word){
+    word[0] = tolower(word[0]);
 
-        string_size = ftell(handler);
+    int index = strlen(word) - 1;
 
-        rewind(handler);
+    int i;
 
-        buffer = (char *)malloc(sizeof(char) * (string_size + 1));
-
-        read_size = fread(buffer, sizeof(char), string_size, handler);
-
-        buffer[string_size] = '\0';
-
-        if (string_size != read_size)
-        {
-            free(buffer);
-            buffer = NULL;
+    for(i=index;i>0;i--){
+        if(word[i]<97 || word[i]>122){
+            word[i]='\0';
         }
-
-        fclose(handler);
     }
-
-    return buffer;
-}
-
-int main()
-{
-    char *string = ReadFile("entry.txt");
-    if (string)
-    {
-        puts(string);
-        free(string);
-    }
-
-    return 0;
+    return;
 }
